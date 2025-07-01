@@ -1,0 +1,8 @@
+# Package Cache
+node_modules/
+
+# Secrets
+.env
+
+# User-specific files
+.vscode/
