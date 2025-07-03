@@ -11,7 +11,7 @@ export async function GetCommands() {
 	const commands = new Collection<string, Command>();
 
 	for (const commandFile of commandModules) {
-		const command = (await import(join(commandsDir, commandFile)))?.command;
+		const command = (await import(`file://${join(commandsDir, commandFile)}`))?.command;
 
 		const { isValid, command: validatedCommand } = CheckCommand(command);
 		if (!isValid) {
