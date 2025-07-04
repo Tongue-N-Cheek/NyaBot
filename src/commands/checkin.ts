@@ -1,4 +1,4 @@
-import { SlashCommandBuilder, ChatInputCommandInteraction, MessageFlags } from "discord.js";
+import { SlashCommandBuilder, ChatInputCommandInteraction, MessageFlags, AttachmentBuilder, EmbedBuilder } from "discord.js";
 
 import { GetActiveSession, GetPrefs, SetActiveSession } from "../data.ts";
 import { Projects } from "../projects.ts";
@@ -10,11 +10,10 @@ export const command = {
 		.setName("checkin")
 		.setDescription("Check in to start logging your time")
 		.addStringOption(option => {
-			option
+			return option
 				.setName("project")
 				.setDescription("The project you are working on (optional)")
 				.setChoices(...Projects.map(project => ({ name: project, value: project })))
-			return option;
 		}),
 	Execute: async (interaction: ChatInputCommandInteraction) => {
 		const activeSession = GetActiveSession(interaction.client, interaction.user.id);
@@ -46,6 +45,14 @@ export const command = {
 			}
 		);
 
-		await interaction.reply(`Checked in for ${prefs.lastProject}!`);
+		await interaction.reply({
+			embeds: [
+				new EmbedBuilder()
+					.setDescription(`Checked in for ${prefs.lastProject}!`)
+					.setAuthor({ name: interaction.user.displayName, iconURL: interaction.user.displayAvatarURL() })
+					.setImage("https://raw.githubusercontent.com/Tongue-N-Cheek/NyaBot/refs/heads/main/resources/checkin.png")
+					.setColor(0x00FF00)
+			]
+		});
 	}
 } satisfies Command;

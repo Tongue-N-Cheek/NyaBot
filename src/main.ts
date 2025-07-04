@@ -20,7 +20,7 @@ client.once(Events.ClientReady, readyClient => {
 
 client.on(Events.InteractionCreate, async interaction => {
 	if (!interaction.isChatInputCommand()) return;
-	console.log(`Command ${interaction.commandName} was run by ${interaction.user.tag}`);
+	console.log(`Command ${interaction.commandName} was run by ${interaction.user.id}`);
 	const command = interaction.client.commands.get(interaction.commandName);
 	if (!command) {
 		console.error(`No command matching ${interaction.commandName} was found.`);
