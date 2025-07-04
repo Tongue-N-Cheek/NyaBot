@@ -6,7 +6,7 @@ import { CheckCommand } from "./errorChecker.ts";
 import type { Command } from "./types/command.ts";
 
 export async function GetCommands() {
-	const commandsDir = join(import.meta.dirname, process.env.COMMANDS_DIR || "commands");
+	const commandsDir = join(import.meta.dirname, "..", process.env.COMMANDS_DIR || "commands");
 	const commandModules = readdirSync(commandsDir).filter(file => file.endsWith(".ts"));
 	const commands = new Collection<string, Command>();
 

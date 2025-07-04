@@ -6,3 +6,6 @@ node_modules/
 
 # User-specific files
 .vscode/
+
+# Runtime-generated data
+data/

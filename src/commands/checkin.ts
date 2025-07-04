@@ -1,12 +1,51 @@
-import { SlashCommandBuilder, CommandInteraction } from "discord.js";
+import { SlashCommandBuilder, ChatInputCommandInteraction, MessageFlags } from "discord.js";
 
+import { GetActiveSession, GetPrefs, SetActiveSession } from "../data.ts";
+import { Projects } from "../projects.ts";
 import type { Command } from "../types/command.ts";
+import type { Project } from "../types/projects.js";
 
 export const command = {
 	data: new SlashCommandBuilder()
 		.setName("checkin")
-		.setDescription("Check in to start logging your time"),
-	Execute: async (interaction: CommandInteraction) => {
-		await interaction.reply(`checkin was run by ${interaction.user.username}`);
+		.setDescription("Check in to start logging your time")
+		.addStringOption(option => {
+			option
+				.setName("project")
+				.setDescription("The project you are working on (optional)")
+				.setChoices(...Projects.map(project => ({ name: project, value: project })))
+			return option;
+		}),
+	Execute: async (interaction: ChatInputCommandInteraction) => {
+		const activeSession = GetActiveSession(interaction.client, interaction.user.id);
+		if (activeSession !== undefined) {
+			await interaction.reply({
+				content: "You are already checked in!"
+					+ ` (Started at <t:${activeSession.start}:t> for ${activeSession.project})`,
+				flags: MessageFlags.Ephemeral
+			});
+			return;
+		}
+
+		const prefs = GetPrefs(
+			interaction.client,
+			interaction.user.id,
+			{
+				lastProject: (interaction.options.getString("project") as Project)
+					|| process.env.DEFAULT_PROJECT,
+				reminderMinutes: Number(process.env.DEFAULT_REMINDER_MINUTES)
+			}
+		);
+
+		SetActiveSession(
+			interaction.client,
+			interaction.user.id,
+			{
+				project: prefs.lastProject,
+				start: Math.floor(Date.now() / 1000).toString()
+			}
+		);
+
+		await interaction.reply(`Checked in for ${prefs.lastProject}!`);
 	}
 } satisfies Command;
