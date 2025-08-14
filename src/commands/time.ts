@@ -1,6 +1,7 @@
 import { SlashCommandBuilder, CommandInteraction, EmbedBuilder, MessageFlags } from "discord.js";
 
 import { GetHistory } from "../data.ts";
+import { formatTime } from "../timeFormatter.ts";
 import type { Command } from "../types/command.js";
 
 export const command = {
@@ -27,7 +28,7 @@ export const command = {
 					.setTitle("Time Logged")
 					.setDescription(
 						timeTotals.map(({ project, time }, index) => {
-							return `${index + 1}. ${project}: ${Math.floor(time / 60 / 60)} hours`;
+							return `${index + 1}. ${project}: ${formatTime(time)}`;
 						}).join("\n")
 					)
 					.setAuthor({ name: interaction.user.displayName, iconURL: interaction.user.displayAvatarURL() })
