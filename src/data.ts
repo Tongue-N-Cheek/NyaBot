@@ -51,6 +51,53 @@ export function ArchiveSession(
 	return client.data.hours[project][discordId].at(-1)!;
 }
 
+export function EditSession(
+	client: NyaClient,
+	discordId: string,
+	original: HoursData[string][number],
+	edited: HoursData[string][number]
+) {
+	const history = Object.entries(GetHistory(client, discordId));
+
+	let sessionIndex = -1;
+	const project = history.find(([_, sessions]) => {
+		return sessions.some((session, i) => {
+			const matches = session.start === original.start && session.end === original.end;
+			if (matches) sessionIndex = i;
+			return matches;
+		});
+	})![0] as Project;
+
+	if (sessionIndex === -1) return false;
+
+	client.data.hours[project][discordId]![sessionIndex] = edited;
+	WriteCache(client);
+	return true;
+}
+
+export function DeleteSession(
+	client: NyaClient,
+	discordId: string,
+	hoursData: HoursData[string][number]
+) {
+	const history = Object.entries(GetHistory(client, discordId));
+
+	let sessionIndex = -1;
+	const project = history.find(([_, sessions]) => {
+		return sessions.some((session, i) => {
+			const matches = session.start === hoursData.start && session.end === hoursData.end;
+			if (matches) sessionIndex = i;
+			return matches;
+		});
+	})![0] as Project;
+
+	if (sessionIndex === -1) return false;
+
+	client.data.hours[project][discordId]!.splice(sessionIndex, 1);
+	WriteCache(client);
+	return true;
+}
+
 export function GetHistory(
 	client: NyaClient,
 	discordId: string
