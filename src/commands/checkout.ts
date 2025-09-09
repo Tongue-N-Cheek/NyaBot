@@ -3,6 +3,7 @@ import { SlashCommandBuilder, CommandInteraction, MessageFlags, EmbedBuilder } f
 import { ArchiveSession, ClearActiveSession, GetActiveSession } from "../data.ts";
 import { formatTime } from "../timeFormatter.ts";
 import type { Command } from "../types/command.ts";
+import { CreateDefaultEmbed } from "../nyaEmbedBuilder.ts";
 
 export const command = {
 	data: new SlashCommandBuilder()
@@ -34,9 +35,11 @@ export const command = {
 
 		await interaction.reply({
 			embeds: [
-				new EmbedBuilder()
-					.setDescription(`Checked out! You logged ${formatTime(time)} for ${activeSession.project}`)
-					.setAuthor({ name: interaction.user.displayName, iconURL: interaction.user.displayAvatarURL() })
+				CreateDefaultEmbed(interaction)
+					.setDescription(
+						`Checked out! You logged ${formatTime(time)} for ${activeSession.project}.`
+						+ "\n\nDon't forget to commit and push your changes, or post a screenshot of your work."
+					)
 					.setImage("https://raw.githubusercontent.com/Tongue-N-Cheek/NyaBot/refs/heads/main/resources/checkout.png")
 					.setColor(0xFF0000)
 			]

@@ -12,7 +12,8 @@
 	},
 	"dependencies": {
 		"discord.js": "^14.21.0",
-		"dotenv": "^17.0.0"
+		"dotenv": "^17.0.0",
+		"temporal-polyfill": "^0.3.0"
 	},
 	"devDependencies": {
 		"typescript": "^5.8.3"

@@ -1,9 +1,10 @@
-import { SlashCommandBuilder, ChatInputCommandInteraction, MessageFlags, AttachmentBuilder, EmbedBuilder } from "discord.js";
+import { SlashCommandBuilder, ChatInputCommandInteraction, MessageFlags } from "discord.js";
 
 import { GetActiveSession, GetPrefs, SetActiveSession } from "../data.ts";
 import { Projects } from "../projects.ts";
 import type { Command } from "../types/command.ts";
 import type { Project } from "../types/projects.js";
+import { CreateDefaultEmbed } from "../nyaEmbedBuilder.ts";
 
 export const command = {
 	data: new SlashCommandBuilder()
@@ -32,7 +33,8 @@ export const command = {
 			{
 				lastProject: (interaction.options.getString("project") as Project)
 					|| process.env.DEFAULT_PROJECT,
-				reminderMinutes: Number(process.env.DEFAULT_REMINDER_MINUTES)
+				reminderMinutes: Number(process.env.DEFAULT_REMINDER_MINUTES),
+				immediateTimeTimeout: 0
 			}
 		);
 
@@ -47,9 +49,8 @@ export const command = {
 
 		await interaction.reply({
 			embeds: [
-				new EmbedBuilder()
+				CreateDefaultEmbed(interaction)
 					.setDescription(`Checked in for ${prefs.lastProject}!`)
-					.setAuthor({ name: interaction.user.displayName, iconURL: interaction.user.displayAvatarURL() })
 					.setImage("https://raw.githubusercontent.com/Tongue-N-Cheek/NyaBot/refs/heads/main/resources/checkin.png")
 					.setColor(0x00FF00)
 			]

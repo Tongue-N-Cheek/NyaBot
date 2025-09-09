@@ -1,17 +1,32 @@
-import { SlashCommandBuilder, CommandInteraction, MessageFlags } from "discord.js";
+import { SlashCommandBuilder, MessageFlags, PermissionFlagsBits, ChatInputCommandInteraction, EmbedBuilder, GuildMember } from "discord.js";
 import { Temporal } from "temporal-polyfill";
 
 import { GetHistory } from "../data.ts";
 import { formatTime } from "../timeFormatter.ts";
 import type { Command } from "../types/command.js";
-import { CreateDefaultEmbed } from "../nyaEmbedBuilder.ts";
 
 export const command = {
 	data: new SlashCommandBuilder()
-		.setName("time")
-		.setDescription("View your time logged"),
-	Execute: async (interaction: CommandInteraction) => {
-		const history = Object.entries(GetHistory(interaction.client, interaction.user.id));
+		.setName("view")
+		.setDescription("View total time logged for a particular person (Admin only)")
+		.addUserOption(option => option
+			.setName("user")
+			.setDescription("The user to view the time for")
+			.setRequired(true)
+		)
+		.setDefaultMemberPermissions(PermissionFlagsBits.Administrator),
+	Execute: async (interaction: ChatInputCommandInteraction) => {
+		const user = interaction.options.getUser("user");
+
+		if (user === null) {
+			await interaction.reply({
+				content: "Invalid user! (/view <user>)",
+				flags: MessageFlags.Ephemeral
+			});
+			return;
+		}
+
+		const history = Object.entries(GetHistory(interaction.client, user.id));
 
 		const startOfWeek = Number(process.env.START_OF_WEEK);
 		const now = Temporal.Now.zonedDateTimeISO(process.env.TIMEZONE).subtract({ days: 1 });
@@ -44,10 +59,24 @@ export const command = {
 		const weekTotal = timeTotalsPerProject.reduce((total, session) => total + session.weekTime, 0);
 		const overallTotal = timeTotalsPerProject.reduce((total, session) => total + session.totalTime, 0);
 
+		const member = interaction.options.getMember("user");
+		const nickname = member === null
+			? user.displayName
+			: (
+				("nick" in member
+					? member.nick
+					: (member as GuildMember).nickname)
+				?? user.displayName
+			);
+
 		await interaction.reply({
 			embeds: [
-				CreateDefaultEmbed(interaction)
-					.setTitle("Time Logged")
+				new EmbedBuilder()
+					.setAuthor({
+						name: nickname,
+						iconURL: interaction.user.displayAvatarURL()
+					})
+					.setTitle(`Time Logged for ${nickname}`)
 					.setDescription(
 						timeTotalsPerProject.map(({ project, weekTime, totalTime }, index) => {
 							return (
@@ -62,8 +91,7 @@ export const command = {
 							+ (weekTotal === 0 ? "" : `\nThis Week: ${formatTime(weekTotal)}`)
 					})
 					.setColor(0x0099ff)
-			],
-			flags: MessageFlags.Ephemeral
+			]
 		});
 	}
 } satisfies Command;

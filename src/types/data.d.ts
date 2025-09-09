@@ -20,6 +20,7 @@ export interface ActiveSessionsData {
 export interface Prefs {
 	lastProject: Project;
 	reminderMinutes: number;
+	immediateTimeTimeout: number;
 }
 
 export interface PrefsData {

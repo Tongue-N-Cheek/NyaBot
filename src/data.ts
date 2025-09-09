@@ -15,6 +15,11 @@ export function GetPrefs(client: NyaClient, discordId: string, defaultPrefs?: Pr
 	return client.data.prefs[discordId];
 }
 
+export function SetPref<T extends keyof Prefs>(client: NyaClient, discordId: string, key: T, value: Prefs[T]) {
+	client.data.prefs[discordId][key] = value;
+	WriteCache(client);
+}
+
 export function GetActiveSession(
 	client: NyaClient,
 	discordId: string
