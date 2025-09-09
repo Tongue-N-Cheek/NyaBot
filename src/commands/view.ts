@@ -74,7 +74,7 @@ export const command = {
 				new EmbedBuilder()
 					.setAuthor({
 						name: nickname,
-						iconURL: interaction.user.displayAvatarURL()
+						iconURL: user.displayAvatarURL()
 					})
 					.setTitle(`Time Logged for ${nickname}`)
 					.setDescription(
