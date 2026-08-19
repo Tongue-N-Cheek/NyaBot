@@ -98,7 +98,8 @@ export const command = {
 					.setDescription(`Immediately logged ${formatTime(extraTime)} for ${prefs.lastProject}!`)
 					.setImage("https://raw.githubusercontent.com/Tongue-N-Cheek/NyaBot/refs/heads/main/resources/checkout.png")
 					.setColor(0x00FF00)
-			]
+			],
+			flags: MessageFlags.SuppressNotifications
 		});
 	}
 } satisfies Command;

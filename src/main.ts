@@ -1,4 +1,4 @@
-import { Events, GatewayIntentBits } from "discord.js";
+import { Events, GatewayIntentBits, MessageFlags } from "discord.js";
 
 import { CheckDotenv } from "./errorChecker.ts";
 import { GetCommands } from "./getCommands.ts";
@@ -29,10 +29,12 @@ client.on(Events.InteractionCreate, async interaction => {
 		await command.Execute(interaction);
 	} catch (error) {
 		console.error("Internal error while executing command:\n", error);
-		await interaction.reply({
-			content: "There was an error while executing this command!",
-			ephemeral: true
-		});
+		try {
+			await interaction.reply({
+				content: "There was an error while executing this command!",
+				flags: MessageFlags.Ephemeral
+			});
+		} catch { }
 	}
 });
 

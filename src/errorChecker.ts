@@ -54,6 +54,7 @@ function CheckBounds(key: string, min?: number, max?: number, errorMessage?: str
 type ValidatedCommand = { isValid: true; command: Command } | { isValid: false; command: any };
 
 export function CheckCommand(command: any): ValidatedCommand {
+	if (command === undefined) return { isValid: false, command };
 	if (!("data" in command)) return { isValid: false, command };
 	if (!("Execute" in command)) return { isValid: false, command };
 

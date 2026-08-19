@@ -69,7 +69,10 @@ export const command = {
 
 		if (endTime === startTime) {
 			DeleteSession(interaction.client, interaction.user.id, pastSession);
-			await interaction.reply("Successfully deleted your last session.");
+			await interaction.reply({
+				content: "Successfully deleted your last session.",
+				flags: MessageFlags.SuppressNotifications
+			});
 		} else {
 			EditSession(
 				interaction.client,
@@ -78,9 +81,10 @@ export const command = {
 				{ ...pastSession, end: endTime.toString() }
 			);
 
-			await interaction.reply(
-				`Successfully edited your last session. New logged time: ${formatTime(endTime - startTime)}`
-			);
+			await interaction.reply({
+				content: `Successfully edited your last session. New logged time: ${formatTime(endTime - startTime)}`,
+				flags: MessageFlags.SuppressNotifications
+			});
 		}
 	}
 } satisfies Command;

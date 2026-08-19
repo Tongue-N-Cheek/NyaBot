@@ -43,7 +43,8 @@ export const command = {
 					)
 					.setImage("https://raw.githubusercontent.com/Tongue-N-Cheek/NyaBot/refs/heads/main/resources/checkout.png")
 					.setColor(0xFF0000)
-			]
+			],
+			flags: MessageFlags.SuppressNotifications
 		});
 	}
 } satisfies Command;
