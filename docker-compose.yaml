@@ -1,0 +1,6 @@
+services:
+  nyabot:
+    build:
+      context: .
+    volumes:
+      - /tank/Applications/NyaBot:/data

@@ -1,21 +1,22 @@
 {
 	"name": "nyabot",
-	"version": "1.0.0",
-	"description": "Tongue N' Cheek Automated Assistant",
+	"version": "1.1.0",
+	"description": "Tongue In Cheek Automated Assistant",
 	"license": "MIT",
-	"author": "Tongue N' Cheek Productions, LLC",
+	"author": "Tongue In Cheek Productions, LLC",
 	"type": "module",
 	"main": "src/main.ts",
 	"scripts": {
-		"start": "node --experimental-strip-types src/main.ts",
-		"register-commands": "node --experimental-strip-types src/registerCommands.ts"
+		"build": "tsc"
+		"start": "node src/main.ts",
+		"register-commands": "node src/registerCommands.ts"
 	},
 	"dependencies": {
-		"discord.js": "^14.21.0",
-		"dotenv": "^17.0.0",
+		"discord.js": "^14.27.0",
+		"dotenv": "^17.4.0",
 		"temporal-polyfill": "^0.3.0"
 	},
 	"devDependencies": {
-		"typescript": "^5.8.3"
+		"typescript": "^7.0.0"
 	}
 }
