@@ -1,4 +1,4 @@
-import type { Project } from "./projects.js";
+import type { Project } from "./projects.ts";
 
 export interface HoursData {
 	[discordUserId: string]: Array<{

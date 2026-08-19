@@ -1,4 +1,4 @@
-import type { NyaClient } from "../nyaClient.js";
+import type { NyaClient } from "../nyaClient.ts";
 
 declare module "discord.js" {
 	interface CommandInteraction {

@@ -1,6 +1,5 @@
-import { Temporal } from "temporal-polyfill";
-
 import { Projects } from "./projects.ts";
+
 import type { Command } from "./types/command.ts";
 
 export function CheckDotenv() {

@@ -1,10 +1,10 @@
 import { SlashCommandBuilder, CommandInteraction, MessageFlags } from "discord.js";
-import { Temporal } from "temporal-polyfill";
 
 import { GetHistory } from "../data.ts";
 import { formatTime } from "../timeFormatter.ts";
-import type { Command } from "../types/command.js";
 import { CreateDefaultEmbed } from "../nyaEmbedBuilder.ts";
+
+import type { Command } from "../types/command.ts";
 
 export const command = {
 	data: new SlashCommandBuilder()

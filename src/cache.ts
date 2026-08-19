@@ -1,10 +1,11 @@
-import { existsSync, mkdirSync, readFileSync, writeFileSync } from "fs";
-import { join } from "path";
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
+import { join } from "node:path";
 
 import { CheckDotenv } from "./errorChecker.ts";
 import { Projects } from "./projects.ts";
-import type { ActiveSessionsData, HoursData, PrefsData } from "./types/data.js";
-import type { Project } from "./types/projects.js";
+
+import type { ActiveSessionsData, HoursData, PrefsData } from "./types/data.ts";
+import type { Project } from "./types/projects.ts";
 import type { NyaClient } from "./nyaClient.ts";
 
 export interface DataCache {

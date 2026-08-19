@@ -3,6 +3,7 @@ import { readdirSync } from "node:fs";
 import { join } from "node:path";
 
 import { CheckCommand } from "./errorChecker.ts";
+
 import type { Command } from "./types/command.ts";
 
 export async function GetCommands() {

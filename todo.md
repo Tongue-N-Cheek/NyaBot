@@ -1,0 +1,13 @@
+- [ ] Exporting hours (admin)
+- [ ] Edit clockout time; keep original clockout as hidden data
+- [ ] Clockout reminders
+- [ ] Auto checkout after 12 hours
+- [ ] Data-driven checkin/out images
+- [ ] Data-driven project detection
+- [ ] project display name <-> id map
+- [ ] Logging lead pings
+- [ ] Multi-team/server usage
+- [ ] Burndown chart creation from OpenProject
+- [ ] Tracking individual task progress week-by-week
+- [ ] Tracking overall version progress week-by-week
+- [ ] Weekly nyabot hours messages

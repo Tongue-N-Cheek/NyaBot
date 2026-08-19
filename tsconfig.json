@@ -1,12 +1,18 @@
 {
 	"compilerOptions": {
 		"target": "esnext",
-		"lib": ["ESNext"],
+		"lib": [
+			"ESNext"
+		],
+		"types": [
+			"node"
+		],
 		"module": "nodenext",
 		"moduleResolution": "nodenext",
+		"outDir": "./dist",
+		"rootDir": "./src",
+		"rewriteRelativeImportExtensions": true,
 		"resolveJsonModule": true,
-		"allowImportingTsExtensions": true,
-		"noEmit": true,
 		"verbatimModuleSyntax": true,
 		"erasableSyntaxOnly": true,
 		"esModuleInterop": true,

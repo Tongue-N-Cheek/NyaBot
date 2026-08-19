@@ -2,6 +2,7 @@ import { SlashCommandBuilder, MessageFlags, ChatInputCommandInteraction } from "
 
 import { DeleteSession, EditSession, GetActiveSession, GetHistory } from "../data.ts";
 import { formatTime, parseTime } from "../timeFormatter.ts";
+
 import type { Command } from "../types/command.ts";
 
 export const command = {

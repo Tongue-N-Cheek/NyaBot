@@ -1,7 +1,8 @@
 import { WriteCache } from "./cache.ts";
+
 import type { NyaClient } from "./nyaClient.ts";
-import type { ActiveSessionsData, HoursData, Prefs } from "./types/data.js";
-import type { Project } from "./types/projects.js";
+import type { ActiveSessionsData, HoursData, Prefs } from "./types/data.ts";
+import type { Project } from "./types/projects.ts";
 
 export function GetPrefs(client: NyaClient, discordId: string): Prefs
 export function GetPrefs(client: NyaClient, discordId: string, defaultPrefs: Prefs): Prefs

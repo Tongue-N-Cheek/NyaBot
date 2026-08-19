@@ -7,16 +7,15 @@
 	"type": "module",
 	"main": "src/main.ts",
 	"scripts": {
-		"build": "tsc"
-		"start": "node src/main.ts",
-		"register-commands": "node src/registerCommands.ts"
+		"build": "tsc",
+		"debug": "node --env-file .env src/main.ts",
+		"register-commands": "node --env-file .env src/registerCommands.ts"
 	},
 	"dependencies": {
-		"discord.js": "^14.27.0",
-		"dotenv": "^17.4.0",
-		"temporal-polyfill": "^0.3.0"
+		"discord.js": "^14.27.0"
 	},
 	"devDependencies": {
+		"@types/node": "^26.2.0",
 		"typescript": "^7.0.0"
 	}
 }

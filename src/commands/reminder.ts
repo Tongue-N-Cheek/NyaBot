@@ -1,4 +1,4 @@
-import { SlashCommandBuilder, ChatInputCommandInteraction, MessageFlags } from "discord.js";
+import { SlashCommandBuilder, ChatInputCommandInteraction, MessageFlags, EmbedBuilder } from "discord.js";
 
 import { GetActiveSession, GetPrefs, SetActiveSession } from "../data.ts";
 import { Projects } from "../projects.ts";
@@ -28,13 +28,12 @@ export const command = {
 			return;
 		}
 
-		const selectedProject = (interaction.options.getString("project") as Project) || process.env.DEFAULT_PROJECT;
-
 		const prefs = GetPrefs(
 			interaction.client,
 			interaction.user.id,
 			{
-				lastProject: selectedProject,
+				lastProject: (interaction.options.getString("project") as Project)
+					|| process.env.DEFAULT_PROJECT,
 				reminderMinutes: Number(process.env.DEFAULT_REMINDER_MINUTES),
 				immediateTimeTimeout: 0
 			}
@@ -44,7 +43,7 @@ export const command = {
 			interaction.client,
 			interaction.user.id,
 			{
-				project: selectedProject,
+				project: prefs.lastProject,
 				start: Math.floor(Date.now() / 1000).toString()
 			}
 		);
@@ -52,7 +51,7 @@ export const command = {
 		await interaction.reply({
 			embeds: [
 				CreateDefaultEmbed(interaction)
-					.setDescription(`Checked in for ${selectedProject}!`)
+					.setDescription(`Checked in for ${prefs.lastProject}!`)
 					.setImage("https://raw.githubusercontent.com/Tongue-N-Cheek/NyaBot/refs/heads/main/resources/checkin.png")
 					.setColor(0x00FF00)
 			]

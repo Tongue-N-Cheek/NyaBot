@@ -2,9 +2,10 @@ import { SlashCommandBuilder, MessageFlags, ChatInputCommandInteraction } from "
 
 import { ArchiveSession, GetActiveSession, GetPrefs, SetPref } from "../data.ts";
 import { formatTime, parseTime } from "../timeFormatter.ts";
-import type { Command } from "../types/command.js";
-import type { Project } from "../types/projects.js";
 import { CreateDefaultEmbed } from "../nyaEmbedBuilder.ts";
+
+import type { Command } from "../types/command.ts";
+import type { Project } from "../types/projects.ts";
 
 export const command = {
 	data: new SlashCommandBuilder()
@@ -15,7 +16,7 @@ export const command = {
 				.setDescription("The amount of time to log (hh:mm)")
 				.setRequired(true)
 		}),
-	Execute: async (interaction: ChatInputCommandInteraction) => {		
+	Execute: async (interaction: ChatInputCommandInteraction) => {
 		const activeSession = GetActiveSession(interaction.client, interaction.user.id);
 		if (activeSession !== undefined) {
 			await interaction.reply({
@@ -67,8 +68,7 @@ export const command = {
 			await interaction.reply({
 				content:
 					"You're currently on a cooldown for logging extra time."
-					+ ` You can log extra time again in ${
-						formatTime(prefs.immediateTimeTimeout - Math.floor(Date.now() / 1000))
+					+ ` You can log extra time again in ${formatTime(prefs.immediateTimeTimeout - Math.floor(Date.now() / 1000))
 					}.`,
 				flags: MessageFlags.Ephemeral
 			});

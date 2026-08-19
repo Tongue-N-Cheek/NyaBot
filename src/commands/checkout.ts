@@ -2,8 +2,9 @@ import { SlashCommandBuilder, CommandInteraction, MessageFlags, EmbedBuilder } f
 
 import { ArchiveSession, ClearActiveSession, GetActiveSession } from "../data.ts";
 import { formatTime } from "../timeFormatter.ts";
-import type { Command } from "../types/command.ts";
 import { CreateDefaultEmbed } from "../nyaEmbedBuilder.ts";
+
+import type { Command } from "../types/command.ts";
 
 export const command = {
 	data: new SlashCommandBuilder()

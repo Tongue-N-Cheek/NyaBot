@@ -1,5 +1,3 @@
-import "dotenv/config";
-
 import { Events, GatewayIntentBits } from "discord.js";
 
 import { CheckDotenv } from "./errorChecker.ts";
