@@ -17,9 +17,9 @@ export interface DataCache {
 export function RefreshCache(): DataCache {
 	CheckDotenv();
 
-	const rawDataDir = process.env.DATA_DIR || "./data";
+	const dataDirRaw = process.env.DATA_DIR || "./data";
 
-	const dataDir = isAbsolute(rawDataDir) ? rawDataDir : join(import.meta.dirname, "..", rawDataDir);
+	const dataDir = isAbsolute(dataDirRaw) ? dataDirRaw : join(import.meta.dirname, "..", dataDirRaw);
 	if (!existsSync(dataDir)) {
 		console.warn(`No data directory found. Creating directory at ${dataDir}`);
 		mkdirSync(dataDir, { recursive: true });
@@ -66,7 +66,9 @@ export function RefreshCache(): DataCache {
 }
 
 export function WriteCache(client: NyaClient) {
-	const dataDir = join(import.meta.dirname, "..", process.env.DATA_DIR || "data");
+	const dataDirRaw = process.env.DATA_DIR || "./data";
+	const dataDir = isAbsolute(dataDirRaw) ? dataDirRaw : join(import.meta.dirname, "..", dataDirRaw);
+
 	writeFileSync(join(dataDir, "currentSessions.json"), JSON.stringify(client.data.activeSessions));
 	writeFileSync(join(dataDir, "prefs.json"), JSON.stringify(client.data.prefs));
 	for (const project of Projects) {
