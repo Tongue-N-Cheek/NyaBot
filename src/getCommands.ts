@@ -1,13 +1,15 @@
 import { Collection } from "discord.js";
 import { readdirSync } from "node:fs";
-import { join } from "node:path";
+import { isAbsolute, join } from "node:path";
 
 import { CheckCommand } from "./errorChecker.ts";
 
 import type { Command } from "./types/command.ts";
 
 export async function GetCommands() {
-	const commandsDir = join(import.meta.dirname, "..", process.env.COMMANDS_DIR || "commands");
+	const commandsDirRaw = process.env.COMMANDS_DIR || "commands";
+	const commandsDir = isAbsolute(commandsDirRaw) ? commandsDirRaw : join(import.meta.dirname, commandsDirRaw);
+
 	const commandModules = readdirSync(commandsDir).filter(file => file.endsWith(".ts"));
 	const commands = new Collection<string, Command>();
 

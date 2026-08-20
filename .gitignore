@@ -9,3 +9,4 @@ node_modules/
 
 # Runtime-generated data
 data/
+dist/

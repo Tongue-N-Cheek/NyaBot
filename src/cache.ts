@@ -1,5 +1,5 @@
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
-import { join } from "node:path";
+import { isAbsolute, join } from "node:path";
 
 import { CheckDotenv } from "./errorChecker.ts";
 import { Projects } from "./projects.ts";
@@ -17,15 +17,22 @@ export interface DataCache {
 export function RefreshCache(): DataCache {
 	CheckDotenv();
 
-	if (!existsSync(join(import.meta.dirname, "..", process.env.DATA_DIR || "data", "sessions"))) {
-		console.warn(`No data directory found. Creating ${process.env.DATA_DIR || "data"} in ${import.meta.dirname}`);
-		mkdirSync(join(import.meta.dirname, "..", process.env.DATA_DIR || "data", "sessions"), { recursive: true });
+	const rawDataDir = process.env.DATA_DIR || "./data";
+
+	const dataDir = isAbsolute(rawDataDir) ? rawDataDir : join(import.meta.dirname, "..", rawDataDir);
+	if (!existsSync(dataDir)) {
+		console.warn(`No data directory found. Creating directory at ${dataDir}`);
+		mkdirSync(dataDir, { recursive: true });
 	}
 
-	const dataDir = join(import.meta.dirname, "..", process.env.DATA_DIR || "data");
+	const projectSessionDir = join(dataDir, "sessions");
+	if (!existsSync(projectSessionDir)) {
+		console.warn(`No sessions directory found. Creating directory at ${projectSessionDir}`);
+		mkdirSync(projectSessionDir, { recursive: true });
+	}
+
 	const sessionsJson = join(dataDir, "currentSessions.json");
 	const prefsJson = join(dataDir, "prefs.json");
-	const projectJsons = Projects.map(project => join(dataDir, `sessions/${project}.json`));
 
 	let activeSessions: ActiveSessionsData = {};
 	let prefs: PrefsData = {};
