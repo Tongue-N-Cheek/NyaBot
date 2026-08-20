@@ -26,6 +26,6 @@ ENV PATH=/app/node_modules/.bin:$PATH
 WORKDIR /app
 
 COPY --from=deps --chown=node:node /app/node_modules ./node_modules
-copy --from=builder --chown=node:node /app/dist ./dist
+COPY --from=builder --chown=node:node /app/dist ./dist
 
-CMD ["node", "dist/main.js"]
+CMD ["node", "--env-file", "/run/secrets/nyabot",  "dist/main.js"]

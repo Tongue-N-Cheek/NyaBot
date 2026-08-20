@@ -1,6 +1,10 @@
+secrets:
+  nyabot:
+    file: .env
+
 services:
   nyabot:
     build:
       context: .
-    volumes:
-      - /tank/Applications/NyaBot:/data
+    secrets:
+      - nyabot
