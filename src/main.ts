@@ -3,6 +3,7 @@ import { Events, GatewayIntentBits, MessageFlags } from "discord.js";
 import { CheckDotenv } from "./errorChecker.ts";
 import { GetCommands } from "./getCommands.ts";
 import { NyaClient } from "./nyaClient.ts";
+import { server } from "./httpServer.ts";
 
 CheckDotenv();
 
@@ -36,6 +37,10 @@ client.on(Events.InteractionCreate, async interaction => {
 			});
 		} catch { }
 	}
+});
+
+server.listen(process.env.HTTP_SERVER_PORT, () => {
+	console.log(`HTTP server listening on port ${process.env.HTTP_SERVER_PORT}`);
 });
 
 client.login(process.env.DISCORD_TOKEN);

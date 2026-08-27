@@ -6,6 +6,8 @@ export function CheckDotenv() {
 	CheckExists("DISCORD_TOKEN");
 	CheckExists("DISCORD_CLIENT_ID");
 	CheckExists("DISCORD_GUILD_ID");
+	CheckInteger("HTTP_SERVER_PORT");
+	CheckBounds("HTTP_SERVER_PORT", 0, 65535);
 	CheckExists("COMMANDS_DIR");
 	CheckExists("DATA_DIR");
 	CheckExists("TIMEZONE");
