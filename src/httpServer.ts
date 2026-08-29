@@ -2,11 +2,14 @@ import { createServer, type IncomingMessage, type ServerResponse } from "http";
 
 import { Router } from "./httpRouter.ts";
 import { sendError } from "./httpErrorHandler.ts";
+import { GetHasAnyData } from "./data.ts";
+import { GetNyaClient } from "./nyaClient.ts";
 
 const router = new Router({
 	GET: handleIndex
 }, {
-	"healthcheck": handleHealthcheck
+	"healthcheck": handleHealthcheck,
+	"smoketest": handleSmoketest
 });
 
 export const server = createServer(async (request, response) => {
@@ -44,13 +47,25 @@ async function handleHealthcheck(
 	_url: URL,
 	_unhandledEndpoints: string[]
 ) {
-	sendResponse(response, {});
+	sendResponse(response);
+}
+
+async function handleSmoketest(
+	_request: IncomingMessage,
+	response: ServerResponse<IncomingMessage>,
+	_url: URL,
+	_unhandledEndpoints: string[]
+) {
+	sendResponse(response, undefined, GetHasAnyData(GetNyaClient()) ? 200 : 500);
 }
 
 export function sendResponse(
 	response: ServerResponse<IncomingMessage>,
-	data: object,
+	data?: Object | undefined,
 	statusCode: number = 200
 ) {
-	response.writeHead(statusCode).end(JSON.stringify(data));
+	response.writeHead(statusCode);
+
+	if (data !== undefined) response.end(JSON.stringify(data));
+	else response.end();
 }

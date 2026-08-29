@@ -2,12 +2,12 @@ import { Events, GatewayIntentBits, MessageFlags } from "discord.js";
 
 import { CheckDotenv } from "./errorChecker.ts";
 import { GetCommands } from "./getCommands.ts";
-import { NyaClient } from "./nyaClient.ts";
+import { CreateNyaClient } from "./nyaClient.ts";
 import { server } from "./httpServer.ts";
 
 CheckDotenv();
 
-const client = new NyaClient({
+const client = CreateNyaClient({
 	intents: [GatewayIntentBits.Guilds]
 });
 

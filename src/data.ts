@@ -116,3 +116,7 @@ export function GetHistory(
 				.flatMap(([_, history]) => history)
 		])) as Record<Project, HoursData[string]>;
 }
+
+export function GetHasAnyData(client: NyaClient): boolean {
+	return Object.keys(client.data.hours).some(project => Object.keys(client.data.hours[project as Project]).length > 0);
+}
