@@ -12,7 +12,7 @@ export function readBody(request: IncomingMessage) {
 			try {
 				resolve(JSON.parse(body));
 			} catch (error) {
-				reject(error);
+				reject(`${error}`);
 			}
 		});
 		request.on("error", reject);

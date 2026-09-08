@@ -1,16 +1,28 @@
 import { createServer, type IncomingMessage, type ServerResponse } from "http";
 
 import { Router } from "./httpRouter.ts";
-import { sendError } from "./httpErrorHandler.ts";
+import { KnownError } from "./httpErrorHandler.ts";
 import { GetHasAnyData } from "./data.ts";
 import { GetNyaClient } from "./nyaClient.ts";
+import { handleOpenProjectWebhook } from "./webhooks/openproject.ts";
 
-const router = new Router({
-	GET: handleIndex
-}, {
-	"healthcheck": handleHealthcheck,
-	"smoketest": handleSmoketest
-});
+const router = new Router(
+	{
+		GET: send404
+	},
+	{
+		"healthcheck": handleHealthcheck,
+		"smoketest": handleSmoketest,
+		"webhook": handleWebhook
+	}
+);
+
+const webhookRouter = new Router(
+	send404,
+	{
+		"openproject": handleOpenProjectWebhook
+	}
+);
 
 export const server = createServer(async (request, response) => {
 	console.log(request.method, request.url);
@@ -25,20 +37,20 @@ export const server = createServer(async (request, response) => {
 			endpoints
 		);
 	} catch (error) {
+		if (error instanceof KnownError) return;
 		console.error("Uncaught error", error);
-		sendError(response, error as string, 500);
 	}
 });
 
 server.on("error", error => console.error(error));
 
-async function handleIndex(
+async function send404(
 	_request: IncomingMessage,
 	response: ServerResponse<IncomingMessage>,
 	_url: URL,
 	_unhandledEndpoints: string[]
 ) {
-	sendResponse(response, {}, 404);
+	sendResponse(response, undefined, 404);
 }
 
 async function handleHealthcheck(
@@ -59,6 +71,15 @@ async function handleSmoketest(
 	sendResponse(response, undefined, GetHasAnyData(GetNyaClient()) ? 200 : 500);
 }
 
+async function handleWebhook(
+	request: IncomingMessage,
+	response: ServerResponse<IncomingMessage>,
+	url: URL,
+	unhandledEndpoints: string[]
+) {
+	await webhookRouter.route(request, response, url, unhandledEndpoints);
+}
+
 export function sendResponse(
 	response: ServerResponse<IncomingMessage>,
 	data?: Object | undefined,
@@ -66,6 +87,10 @@ export function sendResponse(
 ) {
 	response.writeHead(statusCode);
 
-	if (data !== undefined) response.end(JSON.stringify(data));
+	if (data !== undefined) {
+		response
+			.setHeader("content-type", "application/json")
+			.end(JSON.stringify(data));
+	}
 	else response.end();
 }

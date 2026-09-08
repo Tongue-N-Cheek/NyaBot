@@ -2,6 +2,8 @@ import type { IncomingMessage, ServerResponse } from "node:http";
 
 import { readBody } from "./httpUtil.ts";
 
+export class KnownError extends Error { }
+
 export function sendError(
 	response: ServerResponse<IncomingMessage>,
 	error: string,
@@ -13,23 +15,34 @@ export function sendError(
 export function validateContentType(
 	request: IncomingMessage,
 	response: ServerResponse<IncomingMessage>,
-	expectedType: string = "application/json"
-) {
-	if (request.headers["content-type"] !== expectedType) {
-		sendError(response, `Invalid content type, expected ${expectedType}`, 415);
-		return false;
+	expectedType: string | string[] = "application/json"
+): void | never {
+	if (typeof expectedType === "string") expectedType = [expectedType];
+
+	const contentType = request.headers["content-type"];
+
+	if (contentType === undefined || expectedType.indexOf(contentType) === -1) {
+		const error = `Invalid content type, expected any of ${expectedType.join(", ")}`;
+		sendError(response, error, 415);
+		throw new KnownError(error);
 	}
-	return true;
 }
 
 export async function validateHasBody(
 	request: IncomingMessage,
 	response: ServerResponse<IncomingMessage>
-) {
+): Promise<any> | never {
 	return readBody(request)
-		.then(body => ({ body }))
 		.catch(error => {
 			sendError(response, error, 400);
-			return {} as { body?: undefined };
+			throw new KnownError(error);
 		});
+}
+
+export async function validateHasJSONBody(
+	request: IncomingMessage,
+	response: ServerResponse<IncomingMessage>
+) {
+	validateContentType(request, response, ["application/json", "application/hal+json"]);
+	return validateHasBody(request, response);
 }
