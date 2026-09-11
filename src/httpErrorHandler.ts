@@ -31,7 +31,7 @@ export function validateContentType(
 export async function validateHasBody(
 	request: IncomingMessage,
 	response: ServerResponse<IncomingMessage>
-): Promise<any> | never {
+): Promise<unknown> | never {
 	return readBody(request)
 		.catch(error => {
 			sendError(response, error, 400);
@@ -42,7 +42,7 @@ export async function validateHasBody(
 export async function validateHasJSONBody(
 	request: IncomingMessage,
 	response: ServerResponse<IncomingMessage>
-) {
+): Promise<unknown> | never {
 	validateContentType(request, response, ["application/json", "application/hal+json"]);
 	return validateHasBody(request, response);
 }

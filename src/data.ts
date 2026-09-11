@@ -1,7 +1,8 @@
 import { WriteCache } from "./cache.ts";
 
-import type { NyaClient } from "./nyaClient.ts";
-import type { ActiveSessionsData, HoursData, Prefs } from "./types/data.ts";
+import { GetNyaClient, type NyaClient } from "./nyaClient.ts";
+import { Projects } from "./projects.ts";
+import type { ActiveSessionsData, HoursData, Prefs, TaskRelationsData } from "./types/data.ts";
 import type { Project } from "./types/projects.ts";
 
 export function GetPrefs(client: NyaClient, discordId: string): Prefs
@@ -119,4 +120,28 @@ export function GetHistory(
 
 export function GetHasAnyData(client: NyaClient): boolean {
 	return Object.keys(client.data.hours).some(project => Object.keys(client.data.hours[project as Project]).length > 0);
+}
+
+export function GetProjectFromOpProjectId(op_projectId: number): Project | undefined {
+	const client = GetNyaClient();
+	return Projects.find(project => client.data.taskRelations[project].OP_PROJECT_ID === op_projectId) as Project;
+}
+
+export function GetTaskRelationsData(project: Project): TaskRelationsData {
+	const client = GetNyaClient();
+	return client.data.taskRelations[project];
+}
+
+export function AddAssetRelation(project: Project, op_WPId: number, kitsu_AssetId: string) {
+	const client = GetNyaClient();
+	client.data.taskRelations[project].assetRelations[op_WPId] = kitsu_AssetId;
+
+	WriteCache(client);
+}
+
+export function AddTaskRelation(project: Project, kitsu_TaskId: string, op_WPId: number) {
+	const client = GetNyaClient();
+	client.data.taskRelations[project].taskRelations[kitsu_TaskId] = op_WPId;
+
+	WriteCache(client);
 }

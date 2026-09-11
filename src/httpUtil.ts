@@ -1,6 +1,6 @@
 import type { IncomingMessage } from "node:http";
 
-export function readBody(request: IncomingMessage) {
+export function readBody(request: IncomingMessage): Promise<unknown> {
 	return new Promise((resolve, reject) => {
 		let body = "";
 		request.on("data", chunk => body += chunk);

@@ -6,6 +6,10 @@ export function CheckDotenv() {
 	CheckExists("DISCORD_TOKEN");
 	CheckExists("DISCORD_CLIENT_ID");
 	CheckExists("DISCORD_GUILD_ID");
+	CheckExists("KITSU_TOKEN");
+	CheckExists("KITSU_API_URL");
+	CheckExists("OPENPROJECT_TOKEN");
+	CheckExists("OPENPROJECT_API_URL");
 	CheckInteger("HTTP_SERVER_PORT");
 	CheckBounds("HTTP_SERVER_PORT", 0, 65535);
 	CheckExists("COMMANDS_DIR");
