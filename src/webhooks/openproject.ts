@@ -47,7 +47,7 @@ function CheckWorkPackageEmbeddedFieldsLike(embeddedFields: unknown): embeddedFi
 	);
 }
 
-export function handleOpenProjectWebhook(
+export async function handleOpenProjectWebhook(
 	request: IncomingMessage,
 	response: ServerResponse<IncomingMessage>,
 	_url: URL,
@@ -60,7 +60,7 @@ export function handleOpenProjectWebhook(
 	// 4. POST to data/entities/{id}/tasks
 	// 5. Create each work package for each returned task created
 
-	ProcessOPWebhook(request, response)
+	return ProcessOPWebhook(request, response)
 		.then(async op_Data => {
 			if (op_Data.project === undefined) throw new KnownError("No project found");
 
