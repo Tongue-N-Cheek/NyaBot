@@ -127,6 +127,11 @@ export function GetProjectFromOpProjectId(op_projectId: number): Project | undef
 	return Projects.find(project => client.data.taskRelations[project].OP_PROJECT_ID === op_projectId) as Project;
 }
 
+export function GetProjectFromKitsuProjectId(kitsu_projectId: string): Project | undefined {
+	const client = GetNyaClient();
+	return Projects.find(project => client.data.taskRelations[project].KITSU_PROJECT_ID === kitsu_projectId) as Project;
+}
+
 export function GetTaskRelationsData(project: Project): TaskRelationsData {
 	const client = GetNyaClient();
 	return client.data.taskRelations[project];

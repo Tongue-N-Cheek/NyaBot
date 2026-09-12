@@ -4,6 +4,8 @@ import { CheckDotenv } from "./errorChecker.ts";
 import { GetCommands } from "./getCommands.ts";
 import { CreateNyaClient } from "./nyaClient.ts";
 import { server } from "./httpServer.ts";
+import { GetGlobalKitsuClient } from "./kitsuClient.ts";
+import { OnTaskStatusChanged } from "./webhooks/kitsu.ts";
 
 CheckDotenv();
 
@@ -42,5 +44,8 @@ client.on(Events.InteractionCreate, async interaction => {
 server.listen(process.env.HTTP_SERVER_PORT, () => {
 	console.log(`HTTP server listening on port ${process.env.HTTP_SERVER_PORT}`);
 });
+
+const kitsuClient = GetGlobalKitsuClient();
+kitsuClient.AddEventListener("task:status-changed", data => OnTaskStatusChanged(data));
 
 client.login(process.env.DISCORD_TOKEN);

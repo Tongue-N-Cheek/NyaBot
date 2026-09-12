@@ -7,6 +7,11 @@ export interface CreateUserStoryResponse {
 	id: number;
 }
 
+export interface WorkPackage {
+	id: number;
+	lockVersion: number;
+}
+
 export class CreateUserStoryRequest {
 	private Name: string;
 	private Description: string;
@@ -65,6 +70,26 @@ export class OpenProjectClient {
 			.then(response => {
 				if (response.status >= 400) throw new Error(`Failed to create tasks: ${response.statusText}`);
 				return response.json() as Promise<CreateUserStoryResponse>;
+			});
+	}
+
+	public async UpdateWorkPackageStatus(workPackageId: number, statusId: number) {
+		return this.GetWorkPackage(workPackageId)
+			.then(workPackage => this.SendRequest(
+				"PATCH",
+				`/work_packages/${workPackage.id}`,
+				{
+					"lockVersion": workPackage.lockVersion,
+					"_links": { "status": { "href": `/api/v3/statuses/${statusId}` } }
+				}
+			));
+	}
+
+	public async GetWorkPackage(workPackageId: number) {
+		return this.SendRequest("GET", `/work_packages/${workPackageId}`)
+			.then(response => {
+				if (response.status >= 400) throw new Error(`Failed to get work package: ${response.statusText}`);
+				return response.json() as Promise<WorkPackage>;
 			});
 	}
 

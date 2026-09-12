@@ -25,10 +25,6 @@ interface WorkPackageEmbeddedFieldsLike {
 	status: unknown;
 }
 
-interface WorkPackageLinksFieldsLike {
-	customField3: unknown;
-}
-
 function CheckWorkPackageLike(workPackage: unknown): workPackage is WorkPackageLike {
 	return (
 		typeof workPackage === "object" &&

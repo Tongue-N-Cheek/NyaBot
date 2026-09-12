@@ -8,6 +8,7 @@ export function CheckDotenv() {
 	CheckExists("DISCORD_GUILD_ID");
 	CheckExists("KITSU_TOKEN");
 	CheckExists("KITSU_API_URL");
+	CheckExists("KITSU_EVENTS_URL");
 	CheckExists("OPENPROJECT_TOKEN");
 	CheckExists("OPENPROJECT_API_URL");
 	CheckInteger("HTTP_SERVER_PORT");

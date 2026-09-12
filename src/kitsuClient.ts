@@ -1,3 +1,4 @@
+import { io, type Socket } from "socket.io-client";
 import { GetNyaClient } from "./nyaClient.ts";
 
 import type { TaskRelationsData } from "./types/data.js";
@@ -54,16 +55,45 @@ export class KitsuClient {
 
 	private ApiUrl: string;
 
+	private EventsUrl: string;
+
 	private TaskRelations: Record<Project, TaskRelationsData>;
 
+	private EventSocket: Socket;
+
 	public static CreateDefault(): KitsuClient {
-		return new KitsuClient(process.env.KITSU_TOKEN!, process.env.KITSU_API_URL!, GetNyaClient().data.taskRelations);
+		return new KitsuClient(
+			process.env.KITSU_TOKEN!,
+			process.env.KITSU_API_URL!,
+			process.env.KITSU_EVENTS_URL!,
+			GetNyaClient().data.taskRelations
+		);
 	}
 
-	public constructor(token: string, apiUrl: string, taskRelations: Record<Project, TaskRelationsData>) {
+	public constructor(token: string, apiUrl: string, eventsUrl: string, taskRelations: Record<Project, TaskRelationsData>) {
 		this.Token = token;
 		this.ApiUrl = apiUrl;
+		this.EventsUrl = eventsUrl;
 		this.TaskRelations = taskRelations;
+
+		this.EventSocket = io(
+			this.EventsUrl,
+			{
+				extraHeaders: { Authorization: `Bearer ${this.Token}` },
+				transports: ["websocket"],
+				reconnection: true
+			}
+		);
+
+		this.InitEventSocket();
+	}
+
+	public AddEventListener(event: string, callback: (data: any) => void) {
+		this.EventSocket.on(event, callback);
+	}
+
+	public RemoveEventListener(event: string, callback: (data: any) => void) {
+		this.EventSocket.off(event, callback);
 	}
 
 	public async CreateAssetWithTasks(project: Project, op_AssetTypeId: number, assetInfo: CreateAssetRequest) {
@@ -115,6 +145,12 @@ export class KitsuClient {
 				console.log(`Received status ${response.status} from kitsu: ${endpoint}`);
 				return response;
 			});
+	}
+
+	private InitEventSocket() {
+		this.EventSocket.on("connect", () => console.log(`Connected to kitsu event socket: ${this.EventSocket.id}`));
+		this.EventSocket.on("connect_error", error => console.log("Failed to connect to kitsu event socket:", error));
+		this.EventSocket.on("disconnect", reason => console.log("Disconnected from kitsu event socket:", reason));
 	}
 }
 
